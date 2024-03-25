@@ -16,6 +16,7 @@ public class ObjectPlacer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI mainGoalText;
 
     private string _textPattern = "Find ";
+    private Animator _textAnimator;
     private List<Vector3> _availablePositions = new List<Vector3>();
     private void OnEnable()
     {
@@ -24,7 +25,8 @@ public class ObjectPlacer : MonoBehaviour
 
     private void Start()
     {
-
+        _textAnimator = mainGoalText.gameObject.GetComponent<Animator>();
+        _textAnimator.SetBool("NewLvl", true);
 
         mainGoalText.text = _textPattern + CurrentLetter;
 
@@ -62,11 +64,13 @@ public class ObjectPlacer : MonoBehaviour
             _availablePositions.RemoveAt(randomIndex);
         }
     }
+
     private void ChangeLvl(int obj)
     {
         gameObject.SetActive(false);
         nextLvl.SetActive(true);
     }
+
     private void OnDisable()
     {
         ClickableObject.Reached -= ChangeLvl;
