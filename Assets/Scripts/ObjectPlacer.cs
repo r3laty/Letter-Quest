@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ObjectPlacer : MonoBehaviour
 {
     public AllLetters CurrentLetter;
+    [Space]
+    [SerializeField] private GameObject nextLvl;
     [Space]
     [SerializeField] private GameObject[] objectPrefabs;
     [Space]
@@ -14,8 +17,15 @@ public class ObjectPlacer : MonoBehaviour
 
     private string _textPattern = "Find ";
     private List<Vector3> _availablePositions = new List<Vector3>();
+    private void OnEnable()
+    {
+        ClickableObject.Reached += ChangeLvl;
+    }
+
     private void Start()
     {
+
+
         mainGoalText.text = _textPattern + CurrentLetter;
 
         FillAvailablePositions();
@@ -44,10 +54,21 @@ public class ObjectPlacer : MonoBehaviour
             Vector3 randomPosition = _availablePositions[randomIndex];
 
             GameObject prefabToPlace = objectPrefabs[i];
+
             var newLetter = Instantiate(prefabToPlace, randomPosition, Quaternion.identity);
             newLetter.name = objectPrefabs[i].name;
+            newLetter.transform.SetParent(transform);
 
             _availablePositions.RemoveAt(randomIndex);
         }
+    }
+    private void ChangeLvl(int obj)
+    {
+        gameObject.SetActive(false);
+        nextLvl.SetActive(true);
+    }
+    private void OnDisable()
+    {
+        ClickableObject.Reached -= ChangeLvl;
     }
 }

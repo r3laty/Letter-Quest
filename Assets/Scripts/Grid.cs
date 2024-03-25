@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -8,12 +7,22 @@ public class Grid : MonoBehaviour
     public int rows = 3;
 
     public int cellSize = 1;
-    void OnDrawGizmos()
+    private void OnEnable()
+    {
+        ClickableObject.Reached += NewLvl;
+    }
+
+    private void NewLvl(int howMuchToRaise)
+    {
+        rows += howMuchToRaise;
+    }
+
+    private void OnDrawGizmos()
     {
         DrawGrid();
     }
 
-    void DrawGrid()
+    private void DrawGrid()
     {
         Gizmos.color = Color.blue;
 
@@ -32,5 +41,9 @@ public class Grid : MonoBehaviour
                 Debug.DrawLine(bottomLeft, topLeft);
             }
         }
+    }
+    private void OnDisable()
+    {
+        ClickableObject.Reached -= NewLvl;
     }
 }
